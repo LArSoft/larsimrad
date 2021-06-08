@@ -16,7 +16,7 @@ art_make(MODULE_LIBRARIES
          ${ART_ROOT_IO_TFILESERVICE_SERVICE}
          art_Persistency_Provenance
          messagefacility::MF_MessageLogger
-         ${CLHEP}
+         
          ROOT::Core
          ROOT::EG
          ROOT::Geom
