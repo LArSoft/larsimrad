@@ -35,8 +35,8 @@ find_ups_product( lardata )
 find_ups_product( larsim )
 find_ups_product( bxdecay0 )
 find_ups_product( nugen )
-find_ups_product( nurandom )
 find_ups_product( gsl )
+find_package( nurandom )
 
 # macros for dictionary and simple_plugin
 include(ArtDictionary)
