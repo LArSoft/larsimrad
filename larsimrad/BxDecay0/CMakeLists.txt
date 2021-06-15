@@ -9,14 +9,13 @@ art_make(MODULE_LIBRARIES
          larcoreobj_SummaryData
          larcorealg_Geometry
          larcore_Geometry_Geometry_service
-         nurandom_RandomUtils_NuRandomService_service
          ${BXDECAY0}
          art::Framework_Services_Registry
          art_root_io::tfile_support
          art_root_io::TFileService_service
          art_Persistency_Provenance
          messagefacility::MF_MessageLogger
-         
+         nurandom::RandomUtils_NuRandomService_service
          ROOT::Core
          ROOT::EG
          ROOT::Geom
