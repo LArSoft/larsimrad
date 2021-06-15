@@ -36,7 +36,7 @@ find_ups_product( larsim )
 find_ups_product( bxdecay0 )
 find_ups_product( nugen )
 find_ups_product( gsl )
-find_package( nurandom )
+find_package( nurandom COMPONENT RandomUtils_NuRandomService_service )
 
 # macros for dictionary and simple_plugin
 include(ArtDictionary)
