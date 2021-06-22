@@ -47,7 +47,7 @@ include(BuildPlugins)
 add_subdirectory(larsimrad)
 
 # tests
-#add_subdirectory(test)
+add_subdirectory(test)
 
 # ups - table and config files
 if(WANT_UPS)
