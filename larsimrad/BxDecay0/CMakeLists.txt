@@ -1,5 +1,5 @@
 include_directories ( ENV BXDECAY0_INC )
-cet_find_library( BXDECAY0 NAMES BxDecay0 PATHS ENV BXDECAY0_LIB NO_DEFAULT_PATH )
+cet_find_library( BXDECAY0 NAMES BxDecay0 PATHS ENV BXDECAY0_LIB  )
 
 art_make(MODULE_LIBRARIES
          larsim_Simulation
@@ -9,14 +9,13 @@ art_make(MODULE_LIBRARIES
          larcoreobj_SummaryData
          larcorealg_Geometry
          larcore_Geometry_Geometry_service
-         nurandom_RandomUtils_NuRandomService_service
          ${BXDECAY0}
-         ${ART_FRAMEWORK_SERVICES_REGISTRY}
-         ${ART_ROOT_IO_TFILE_SUPPORT}
-         ${ART_ROOT_IO_TFILESERVICE_SERVICE}
+         art::Framework_Services_Registry
+         art_root_io::tfile_support
+         art_root_io::TFileService_service
          art_Persistency_Provenance
-         ${MF_MESSAGELOGGER}
-         ${CLHEP}
+         messagefacility::MF_MessageLogger
+         nurandom::RandomUtils_NuRandomService_service
          ROOT::Core
          ROOT::EG
          ROOT::Geom
