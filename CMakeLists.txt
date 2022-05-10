@@ -42,7 +42,7 @@ if (DEFINED ENV{BXDECAY0_LIB})
 endif()
 find_package(BxDecay0 REQUIRED EXPORT)
 find_package(CLHEP COMPONENTS Random REQUIRED EXPORT)
-find_package(ROOT COMPONENTS Core EG Geom GPad Hist Physics)
+find_package(ROOT COMPONENTS Core EG Geom Gpad Hist Physics)
 
 # macros for dictionary and simple_plugin
 include(CetMake)
