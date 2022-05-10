@@ -1,25 +1,51 @@
-include_directories ( $ENV{NUGEN_INC} ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.13.00) - avoid directory-scope functions: use target_link_libraries() with target semantics or target_include_directories() whenever possible
-cet_find_library( BXDECAY0 NAMES BxDecay0 PATHS ENV BXDECAY0_LIB NO_DEFAULT_PATH ) ### MIGRATE-ACTION-REQUIRED (migrate-3.13.00) - avoid: use find_package() with custom Find<pkg>.cmake for Spack compatibility
+if (NOT TARGET nugen::headers)
+  add_library(nugen::headers INTERFACE IMPORTED)
+  set_target_properties(nugen::headers PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${nugen_INCLUDE_DIR}"
+  )
+endif()
 
-art_make(MODULE_LIBRARIES
-         larsim_Simulation
-         lardataalg_DetectorInfo
-         lardataobj_Simulation
-         nusimdata::SimulationBase
-         larcoreobj_SummaryData
-         larcorealg_Geometry
-         larcore_Geometry_Geometry_service
-         nurandom::RandomUtils_NuRandomService_service
-         BXDECAY0
-         art::Framework_Services_Registry
-         art_root_io::tfile_support
-         art_root_io::TFileService_service
-         art::Persistency_Provenance
-         messagefacility::MF_MessageLogger
-         ROOT::Core
-         ROOT::EG
-         ROOT::Geom
-        ) ### MIGRATE-ACTION-RECOMMENDED (migrate-3.13.00) - deprecated: use art_make_library(), art_dictonary(), and cet_build_plugin() with explicit source lists and plugin base types
+cet_make_library(LIBRARY_NAME RadioGen INTERFACE
+  SOURCE BaseRadioGen.h
+  LIBRARIES INTERFACE
+  lardata::DetectorPropertiesService
+  larcore::Geometry_Geometry_service
+  larcoreobj::SummaryData
+  nugen::headers
+  nusimdata::SimulationBase
+  nurandom::RandomUtils_NuRandomService_service
+  art_root_io::TFileService_service
+  art::Framework_Principal
+  art::Framework_Services_Registry
+  messagefacility::MF_MessageLogger
+  fhiclcpp::fhiclcpp
+  cetlib::cetlib
+  cetlib::container_algorithms
+  cetlib_except::cetlib_except
+  ROOT::Core
+  ROOT::EG
+  ROOT::Geom
+  ROOT::Gpad
+  ROOT::Hist
+  ROOT::MathCore
+  ROOT::Physics
+  CLHEP::Random
+)
+
+cet_write_plugin_builder(lar::RadioGenModule art::EDProducer Modules
+  INSTALL_BUILDER
+  LIBRARIES CONDITIONAL
+  larsimrad::RadioGen
+)
+
+include(lar::RadioGenModule)
+
+cet_build_plugin(Decay0Gen lar::RadioGenModule
+  LIBRARIES PRIVATE
+  BxDecay0::BxDecay0
+)
+
+cet_build_plugin(SpectrumVolumeGen lar::RadioGenModule)
 
 install_headers()
 install_fhicl()

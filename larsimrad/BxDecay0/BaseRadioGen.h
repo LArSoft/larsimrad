@@ -4,34 +4,28 @@
 ///          June 2020 PLasorak
 #pragma once
 
-// C++ includes.
-#include <string>
-#include <regex>
-#include <cmath>
-#include <math.h>
-#include <memory>
-#include <iterator>
-#include <sys/stat.h>
-#include <TGeoManager.h>
-#include <TGeoMaterial.h>
-#include <TGeoNode.h>
 
 #include "cetlib/container_algorithms.h"
 
 // Framework includes
-#include "art/Framework/Core/EDProducer.h"
-#include "art/Framework/Principal/Event.h"
-#include "fhiclcpp/ParameterSet.h"
-#include "art/Framework/Principal/Handle.h"
-#include "art/Framework/Services/Registry/ServiceHandle.h"
-#include "art/Framework/Principal/Run.h"
-#include "art/Framework/Core/ModuleMacros.h"
 #include "art_root_io/TFileService.h"
+#include "art/Framework/Core/EDProducer.h"
+#include "art/Framework/Core/ModuleMacros.h"
+#include "art/Framework/Principal/Event.h"
+#include "art/Framework/Principal/Handle.h"
+#include "art/Framework/Principal/Run.h"
+#include "art/Framework/Services/Registry/ServiceHandle.h"
 #include "messagefacility/MessageLogger/MessageLogger.h"
-#include "cetlib_except/exception.h"
-#include "cetlib/search_path.h"
+#include "fhiclcpp/ParameterSet.h"
 #include "cetlib/exempt_ptr.h"
+#include "cetlib/search_path.h"
+#include "cetlib_except/exception.h"
+
+// lar includes
 #include "lardata/DetectorInfoServices/DetectorPropertiesService.h"
+#include "larcore/Geometry/Geometry.h"
+#include "larcoreobj/SummaryData/RunData.h"
+
 // nurandom includes
 #include "nurandom/RandomUtils/NuRandomService.h"
 
@@ -40,30 +34,36 @@
 #include "nusimdata/SimulationBase/MCParticle.h"
 #include "nugen/EventGeneratorBase/evgenbase.h"
 
-// lar includes
-#include "larcore/Geometry/Geometry.h"
-#include "larcoreobj/SummaryData/RunData.h"
-
 // root includes
-
-#include "TLorentzVector.h"
-#include "TGenPhaseSpace.h"
-#include "TMath.h"
-#include "TFile.h"
-#include "TH1D.h"
-#include "TF1.h"
-#include "TH2D.h"
 #include "TCanvas.h"
+#include "TF1.h"
+#include "TFile.h"
+#include "TGenPhaseSpace.h"
+#include "TGeoManager.h"
+#include "TGeoMaterial.h"
+#include "TGeoNode.h"
 #include "TGraph.h"
-#include "TVector3.h"
+#include "TH1D.h"
+#include "TH2D.h"
+#include "TLorentzVector.h"
+#include "TMath.h"
 #include "TRandom.h"
+#include "TVector3.h"
 
 #include "CLHEP/Random/RandFlat.h"
 #include "CLHEP/Random/RandPoisson.h"
 
+// C++ includes.
+#include <cmath>
+#include <iterator>
+#include <map>
+#include <memory>
+#include <regex>
+#include <set>
+#include <string>
+#include <sys/stat.h>
+#include <vector>
 
-
-namespace simb { class MCTruth; }
 namespace evgen { class clhep_random; }
 
 namespace evgen {
