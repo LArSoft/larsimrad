@@ -248,7 +248,7 @@ fcldir	product_dir	job
 ####################################
 product		version		qual	flags		<table_format=2>
 bxdecay0	v1_0_9		-
-larsim		v09_31_00	-
+larsim		v09_31_01	-
 cetmodules	v3_20_00	-	only_for_build
 end_product_list
 ####################################
