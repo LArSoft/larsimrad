@@ -77,7 +77,7 @@ namespace evgen {
     void endJob();
 
     virtual void produce_radio(art::Event& evt) = 0;
-    virtual void beginRun_radio(art::Run&){};
+    virtual void beginRun_radio(art::Run&) {}
     virtual void beginJob_radio() {}
     virtual void endJob_radio() {}
 
@@ -139,17 +139,20 @@ namespace evgen {
     std::string m_volume_gen;  ///< The volume in which to generate the decays
     std::regex m_regex_material;
     std::regex m_regex_volume;
-    double m_Bq;   ///< Radioactivity in Becquerels (decay per sec) per cubic cm.
-    double m_rate; ///< Radioactivity in Becquerels (decay per sec) use either of this of Bq
-    double m_T0;   ///< Beginning of time window to simulate in ns
-    double m_T1;   ///< End of time window to simulate in ns
-    double m_X0;   ///< Bottom corner x position (cm) in world coordinates
-    double m_Y0;   ///< Bottom corner y position (cm) in world coordinates
-    double m_Z0;   ///< Bottom corner z position (cm) in world coordinates
-    double m_X1;   ///< Top corner x position (cm) in world coordinates
-    double m_Y1;   ///< Top corner y position (cm) in world coordinates
-    double m_Z1;   ///< Top corner z position (cm) in world coordinates
-    double m_volume_cc;
+
+    static constexpr double signaling_NaN = std::numeric_limits<double>::signaling_NaN();
+    double m_Bq{signaling_NaN}; ///< Radioactivity in Becquerels (decay per sec) per cubic cm.
+    double m_rate{
+      signaling_NaN}; ///< Radioactivity in Becquerels (decay per sec) use either of this of Bq
+    double m_T0{signaling_NaN}; ///< Beginning of time window to simulate in ns
+    double m_T1{signaling_NaN}; ///< End of time window to simulate in ns
+    double m_X0{signaling_NaN}; ///< Bottom corner x position (cm) in world coordinates
+    double m_Y0{signaling_NaN}; ///< Bottom corner y position (cm) in world coordinates
+    double m_Z0{signaling_NaN}; ///< Bottom corner z position (cm) in world coordinates
+    double m_X1{signaling_NaN}; ///< Top corner x position (cm) in world coordinates
+    double m_Y1{signaling_NaN}; ///< Top corner y position (cm) in world coordinates
+    double m_Z1{signaling_NaN}; ///< Top corner z position (cm) in world coordinates
+    double m_volume_cc{signaling_NaN};
 
     art::ServiceHandle<geo::Geometry const> m_geo_service;
     TGeoManager* m_geo_manager;
@@ -158,7 +161,7 @@ namespace evgen {
     CLHEP::RandFlat m_random_flat;
     CLHEP::RandPoisson m_random_poisson;
 
-    bool m_geo_volume_mode;
+    bool m_geo_volume_mode{false};
     bool m_rate_mode;
     bool m_volume_rand_present;
 
@@ -166,43 +169,42 @@ namespace evgen {
     size_t m_max_tries_rate_calculation;
     size_t m_target_n_point_rate_calculation;
 
-    std::map<const TGeoNode*, double> m_good_nodes = {};
-    std::vector<const TGeoVolume*> m_good_volumes = {};
-    std::vector<const TGeoMaterial*> m_good_materials = {};
+    std::map<const TGeoNode*, double> m_good_nodes{};
+    std::vector<const TGeoVolume*> m_good_volumes{};
+    std::vector<const TGeoMaterial*> m_good_materials{};
 
-    TF1* m_distrib_xpos;
-    TF1* m_distrib_ypos;
-    TF1* m_distrib_zpos;
+    TF1* m_distrib_xpos{nullptr};
+    TF1* m_distrib_ypos{nullptr};
+    TF1* m_distrib_zpos{nullptr};
 
-    int m_nevent;
-    std::map<int, TH2D*> m_pos_xy_TH2D;
-    std::map<int, TH2D*> m_pos_xz_TH2D;
-    std::map<int, TH1D*> m_dir_x_TH1D;
-    std::map<int, TH1D*> m_dir_y_TH1D;
-    std::map<int, TH1D*> m_dir_z_TH1D;
-    std::map<int, TH1D*> m_mom_TH1D;
-    std::map<int, TH1D*> m_ke_TH1D;
-    std::map<int, TH1D*> m_time_TH1D;
-    TH1D* m_pdg_TH1D;
+    int m_nevent{0};
+    std::map<int, TH2D*> m_pos_xy_TH2D{};
+    std::map<int, TH2D*> m_pos_xz_TH2D{};
+    std::map<int, TH1D*> m_dir_x_TH1D{};
+    std::map<int, TH1D*> m_dir_y_TH1D{};
+    std::map<int, TH1D*> m_dir_z_TH1D{};
+    std::map<int, TH1D*> m_mom_TH1D{};
+    std::map<int, TH1D*> m_ke_TH1D{};
+    std::map<int, TH1D*> m_time_TH1D{};
+    TH1D* m_pdg_TH1D{nullptr};
   };
 
-  bool BaseRadioGen::NodeSupported(const TGeoNode* node) const
+  inline bool BaseRadioGen::NodeSupported(const TGeoNode* node) const
   {
     assert(node != nullptr);
     return cet::search_all(m_good_volumes, node->GetVolume()) and
            cet::search_all(m_good_materials, node->GetMedium()->GetMaterial());
   }
 
-  void BaseRadioGen::GetNodeXYZMinMax(const TGeoNode* from,
-                                      const TGeoNode* to,
-                                      double& x_min,
-                                      double& x_max,
-                                      double& y_min,
-                                      double& y_max,
-                                      double& z_min,
-                                      double& z_max)
+  inline void BaseRadioGen::GetNodeXYZMinMax(const TGeoNode* from,
+                                             const TGeoNode* to,
+                                             double& x_min,
+                                             double& x_max,
+                                             double& y_min,
+                                             double& y_max,
+                                             double& z_min,
+                                             double& z_max)
   {
-
     std::vector<const TGeoNode*> mother_nodes;
     const TGeoNode* current_node = from;
     std::string daughter_name = from->GetName();
@@ -264,66 +266,29 @@ namespace evgen {
     z_max = posmax[2];
   }
 
-  BaseRadioGen::BaseRadioGen(fhicl::ParameterSet const& pset)
+  inline BaseRadioGen::BaseRadioGen(fhicl::ParameterSet const& pset)
     : EDProducer{pset}
     , m_material{pset.get<std::string>("material", ".*")}
     , m_volume_rand{""}
     , m_volume_gen{pset.get<std::string>("volume_gen", ".*")}
     , m_regex_material{(std::regex)m_material}
     , m_regex_volume{(std::regex)m_volume_gen}
-    , m_Bq{std::numeric_limits<double>::signaling_NaN()}
-    , m_rate{std::numeric_limits<double>::signaling_NaN()}
-    , m_T0{std::numeric_limits<double>::signaling_NaN()}
-    , m_T1{std::numeric_limits<double>::signaling_NaN()}
-    , m_X0{std::numeric_limits<double>::signaling_NaN()}
-    , m_Y0{std::numeric_limits<double>::signaling_NaN()}
-    , m_Z0{std::numeric_limits<double>::signaling_NaN()}
-    , m_X1{std::numeric_limits<double>::signaling_NaN()}
-    , m_Y1{std::numeric_limits<double>::signaling_NaN()}
-    , m_Z1{std::numeric_limits<double>::signaling_NaN()}
-    , m_volume_cc{std::numeric_limits<double>::signaling_NaN()}
     , m_geo_manager(m_geo_service->ROOTGeoManager())
-    ,
-
-    m_engine(art::ServiceHandle<rndm::NuRandomService>()
-               ->createEngine(*this, "HepJamesRandom", "BaseRadioGen", pset, "SeedBaseRadioGen"))
+    , m_engine(art::ServiceHandle<rndm::NuRandomService>()->registerAndSeedEngine(
+        createEngine(0, "HepRandomEngine", "BaseRadioGen"),
+        "HepJamesRandom",
+        "BaseRadioGen",
+        pset,
+        "SeedBaseRadioGen"))
     , m_random_flat{m_engine}
     , m_random_poisson{m_engine}
-    ,
-
-    m_geo_volume_mode{false}
     , m_rate_mode{pset.has_key("rate")}
     , m_volume_rand_present{pset.has_key("volume_rand")}
-    ,
-
-    m_max_tries_event{pset.get<size_t>("max_tries_event", 1'000'000)}
+    , m_max_tries_event{pset.get<size_t>("max_tries_event", 1'000'000)}
     , m_max_tries_rate_calculation{pset.get<size_t>("max_tries_rate_calculation", 40'000'000)}
-    , m_target_n_point_rate_calculation{pset.get<size_t>("target_n_point_rate_calculation",
-                                                         100'000)}
-    ,
-
-    m_good_nodes{}
-    , m_good_volumes{}
-    , m_good_materials{}
-    ,
-
-    m_distrib_xpos{nullptr}
-    , m_distrib_ypos{nullptr}
-    , m_distrib_zpos{nullptr}
-    ,
-
-    m_nevent{0}
-    , m_pos_xy_TH2D{}
-    , m_pos_xz_TH2D{}
-    , m_dir_x_TH1D{}
-    , m_dir_y_TH1D{}
-    , m_dir_z_TH1D{}
-    , m_mom_TH1D{}
-    , m_ke_TH1D{}
-    , m_time_TH1D{}
-    , m_pdg_TH1D{nullptr}
+    , m_target_n_point_rate_calculation{
+        pset.get<size_t>("target_n_point_rate_calculation", 100'000)}
   {
-
     produces<std::vector<simb::MCTruth>>();
     produces<sumdata::RunData, art::InRun>();
 
@@ -434,7 +399,7 @@ namespace evgen {
       m_distrib_zpos = new TF1("distrib_z", pset.get<std::string>("distrib_z").c_str(), m_Z0, m_Z1);
   }
 
-  void BaseRadioGen::CalculateActiveVolumeFromAllNodes()
+  inline void BaseRadioGen::CalculateActiveVolumeFromAllNodes()
   {
     FillAllNodes(gGeoManager->GetTopNode());
     m_volume_cc = 0;
@@ -456,9 +421,8 @@ namespace evgen {
         << m_volume_gen << " in the geometry.\n";
   }
 
-  void BaseRadioGen::CalculateActiveVolumeFromXYZ()
+  inline void BaseRadioGen::CalculateActiveVolumeFromXYZ()
   {
-
     m_volume_cc = (m_X1 - m_X0) * (m_Y1 - m_Y0) * (m_Z1 - m_Z0);
 
     if (m_material != ".*" || m_volume_gen != ".*") {
@@ -510,20 +474,20 @@ namespace evgen {
     }
   }
 
-  void BaseRadioGen::produce(art::Event& evt)
+  inline void BaseRadioGen::produce(art::Event& evt)
   {
     m_nevent++;
     produce_radio(evt);
   }
 
-  void BaseRadioGen::beginRun(art::Run& run)
+  inline void BaseRadioGen::beginRun(art::Run& run)
   {
     art::ServiceHandle<geo::Geometry const> geo;
-    run.put(std::make_unique<sumdata::RunData>(m_geo_service->DetectorName()));
+    run.put(std::make_unique<sumdata::RunData>(m_geo_service->DetectorName()), art::fullRun());
     beginRun_radio(run);
   }
 
-  void BaseRadioGen::beginJob()
+  inline void BaseRadioGen::beginJob()
   {
     if (m_isotope.empty()) {
       throw cet::exception("BaseRadioGen")
@@ -535,7 +499,7 @@ namespace evgen {
     m_nevent = 0;
   }
 
-  void BaseRadioGen::endJob()
+  inline void BaseRadioGen::endJob()
   {
     if (m_nevent) {
       m_pdg_TH1D->Scale(1. / m_nevent);
@@ -554,7 +518,7 @@ namespace evgen {
     endJob_radio();
   }
 
-  bool BaseRadioGen::GetGoodPositionTime(TLorentzVector& position)
+  inline bool BaseRadioGen::GetGoodPositionTime(TLorentzVector& position)
   {
 
     /// Deal with the time first
@@ -662,7 +626,7 @@ namespace evgen {
 
   //____________________________________________________________________________
   // Generate radioactive decays per isotope per volume according to the FCL parameters
-  int BaseRadioGen::GetNDecays()
+  inline int BaseRadioGen::GetNDecays()
   {
 
     if (m_rate_mode) { return m_random_poisson.fire(m_rate); }
@@ -672,7 +636,8 @@ namespace evgen {
     }
   }
 
-  bool BaseRadioGen::IsDaughterNode(const TGeoNode* daughter_node, const TGeoNode* mother_node)
+  inline bool BaseRadioGen::IsDaughterNode(const TGeoNode* daughter_node,
+                                           const TGeoNode* mother_node)
   {
     if (mother_node == daughter_node) return true;
 
@@ -690,7 +655,7 @@ namespace evgen {
     return false;
   }
 
-  void BaseRadioGen::FillAllNodes(const TGeoNode* curnode)
+  inline void BaseRadioGen::FillAllNodes(const TGeoNode* curnode)
   {
     if (!curnode) return;
     TObjArray* daunodes = curnode->GetNodes();
@@ -705,9 +670,9 @@ namespace evgen {
     }
   }
 
-  bool BaseRadioGen::findNode(const TGeoNode* curnode,
-                              std::string& tgtnname,
-                              const TGeoNode*& targetnode)
+  inline bool BaseRadioGen::findNode(const TGeoNode* curnode,
+                                     std::string& tgtnname,
+                                     const TGeoNode*& targetnode)
   /// Shamelessly stolen from here: https://cdcvs.fnal.gov/redmine/attachments/6719/calc_bbox.C
   {
     std::string nname = curnode->GetName();
@@ -729,9 +694,9 @@ namespace evgen {
     return false;
   }
 
-  bool BaseRadioGen::findMotherNode(const TGeoNode* cur_node,
-                                    std::string& daughter_name,
-                                    const TGeoNode*& mother_node)
+  inline bool BaseRadioGen::findMotherNode(const TGeoNode* cur_node,
+                                           std::string& daughter_name,
+                                           const TGeoNode*& mother_node)
   /// Adapted from above
   {
     TObjArray* daunodes = cur_node->GetNodes();
@@ -756,7 +721,7 @@ namespace evgen {
     return found;
   }
 
-  void BaseRadioGen::DeclareOutputHistos()
+  inline void BaseRadioGen::DeclareOutputHistos()
   {
     art::ServiceHandle<art::TFileService> tfs;
     auto pdgs = {1000020040, 11, -11, 22, 2112, 2212, 9999};
@@ -786,7 +751,7 @@ namespace evgen {
     }
   }
 
-  void BaseRadioGen::SimplePDG(int pdg, int& simple, std::string& name)
+  inline void BaseRadioGen::SimplePDG(int pdg, int& simple, std::string& name)
   {
     switch (pdg) {
     case 1000020040:
@@ -820,7 +785,7 @@ namespace evgen {
     }
   }
 
-  void BaseRadioGen::FillHistos(simb::MCParticle& part)
+  inline void BaseRadioGen::FillHistos(simb::MCParticle& part)
   {
     int pdg = part.PdgCode();
     int simple_pdg = 0;
@@ -842,7 +807,7 @@ namespace evgen {
     m_pdg_TH1D->Fill(simple_pdg);
   }
 
-  TLorentzVector BaseRadioGen::dirCalc(double p, double m)
+  inline TLorentzVector BaseRadioGen::dirCalc(double p, double m)
   {
     // isotropic production angle for the decay product
     double costheta = (2.0 * m_random_flat.fire() - 1.0);
