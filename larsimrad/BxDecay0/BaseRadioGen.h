@@ -275,7 +275,7 @@ namespace evgen {
     , m_regex_volume{(std::regex)m_volume_gen}
     , m_geo_manager(m_geo_service->ROOTGeoManager())
     , m_engine(art::ServiceHandle<rndm::NuRandomService>()->registerAndSeedEngine(
-        createEngine(0, "HepRandomEngine", "BaseRadioGen"),
+        createEngine(0, "HepJamesRandom", "BaseRadioGen"),
         "HepJamesRandom",
         "BaseRadioGen",
         pset,
