@@ -1,17 +1,10 @@
-if (NOT TARGET nugen::headers)
-  add_library(nugen::headers INTERFACE IMPORTED)
-  set_target_properties(nugen::headers PROPERTIES
-    INTERFACE_INCLUDE_DIRECTORIES "${nugen_INCLUDE_DIR}"
-  )
-endif()
-
 cet_make_library(LIBRARY_NAME RadioGen INTERFACE
   SOURCE BaseRadioGen.h
   LIBRARIES INTERFACE
   lardata::DetectorPropertiesService
   larcore::Geometry_Geometry_service
   larcoreobj::SummaryData
-  nugen::headers
+  nugen::EventGeneratorBase
   nusimdata::SimulationBase
   nurandom::RandomUtils_NuRandomService_service
   art_root_io::TFileService_service
