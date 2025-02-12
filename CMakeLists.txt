@@ -24,7 +24,6 @@ cet_report_compiler_flags(REPORT_THRESHOLD VERBOSE)
 
 find_package(larcore REQUIRED EXPORT)
 find_package(larcoreobj REQUIRED EXPORT)
-find_package(lardataobj REQUIRED EXPORT)
 find_package(lardata REQUIRED EXPORT)
 
 find_package(nugen REQUIRED EXPORT)
@@ -37,10 +36,7 @@ find_package(fhiclcpp REQUIRED EXPORT)
 find_package(cetlib REQUIRED EXPORT)
 find_package(cetlib_except REQUIRED EXPORT)
 
-if (DEFINED ENV{BXDECAY0_LIB})
-  set(BxDecay0_DIR $ENV{BXDECAY0_LIB}/cmake/BxDecay0)
-endif()
-find_package(BxDecay0 REQUIRED EXPORT)
+find_package(BxDecay0 REQUIRED EXPORT HINTS $ENV{BXDECAY0_FQ_DIR})
 find_package(CLHEP COMPONENTS Random REQUIRED EXPORT)
 find_package(ROOT COMPONENTS Core EG Geom Gpad Hist Physics)
 
