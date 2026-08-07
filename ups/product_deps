@@ -246,7 +246,7 @@ defaultqual	e26
 ####################################
 product		version		qual	flags		<table_format=2>
 bxdecay0	v1_1_2		-
-larsim		v10_20_05	-
+larsim		v10_20_06	-
 cetmodules	v3_27_04	-	only_for_build
 end_product_list
 ####################################
@@ -307,6 +307,8 @@ c14:debug	c14:debug	c14:debug
 c14:prof	c14:prof	c14:prof
 e26:debug	e26:debug	e26:debug
 e26:prof	e26:prof	e26:prof
+e28:debug	e28:debug	e28:debug
+e28:prof	e28:prof	e28:prof
 end_qualifier_list
 ####################################
 
