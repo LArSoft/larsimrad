@@ -716,6 +716,7 @@ namespace evgen {
         return true;
       }
       found = findMotherNode(anode, daughter_name, mother_node);
+      if (found) return true;
     }
 
     return found;
